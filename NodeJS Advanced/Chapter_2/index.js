@@ -1,8 +1,19 @@
 const express = require('express');
+const crypto = require('crypto');
+const { Worker } = require('worker_threads');
 const app = express();
 
 app.get('/', (req, res) => {
-    res.send('Hi there');
+    const worker = new Worker('./worker.js');
+    worker.on('message', data => {
+        console.log('Data: ' + data);
+        res.send('Data: ' + data);
+    })
 })
 
-app.listen(3000);
+app.get('/fast', (req, res) => {
+    res.send('This was fast!');
+})
+
+app.listen(3000, () => 'Nice bro');
+
